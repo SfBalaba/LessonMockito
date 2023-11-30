@@ -29,7 +29,7 @@ public interface ShoppingService {
     Product getProductByName(String name);
 
     /**
-     * Совершить покупку (уменьшает количество доступных товаров)
+     * Совершить покупку (уменьшает количество доступных товаров и очищает корзину)
      * @param cart корзина
      * @return true - если покупка удалась, false - если что-то пошло не так
      * @throws BuyException - при ошибке покупки

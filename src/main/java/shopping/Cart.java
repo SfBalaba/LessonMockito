@@ -54,7 +54,8 @@ public class Cart {
      * Проверить допустимо ли добавить такое количество товара в корзину
      * @throws IllegalArgumentException - если недопустимо
      */
-    private static void validateCount(Product product, int count) throws IllegalArgumentException {
+    private static void validateCount(Product product, int count)
+            throws IllegalArgumentException {
         if (product.getCount() - count <= 0) {
             throw new IllegalArgumentException(
                     "Невозможно добавить товар '%s' в корзину, т.к. нет необходимого количества товаров"

@@ -1,5 +1,7 @@
 package product;
 
+import java.util.Objects;
+
 /**
  * Товар
  *
@@ -10,18 +12,19 @@ public class Product {
     /**
      * Название
      */
-    private String name;
+    private final String name;
     /**
      * Доступное количество
      */
     private int count;
 
-    public String getName() {
-        return name;
+    public Product(String name, int count) {
+        this.name = name;
+        this.count = count;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getName() {
+        return name;
     }
 
     public int getCount() {
@@ -42,5 +45,20 @@ public class Product {
      */
     public void subtractCount(int count) {
         addCount(-count);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Product product = (Product) o;
+
+        return Objects.equals(name, product.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return name != null ? name.hashCode() : 0;
     }
 }

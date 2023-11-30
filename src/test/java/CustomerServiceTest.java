@@ -3,39 +3,52 @@ import customer.CustomerDao;
 import customer.CustomerService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 
 /**
  * Тестирование класса {@link CustomerService}
  * @author Пыжьянов Вячеслав
  */
+@ExtendWith(MockitoExtension.class)
 public class CustomerServiceTest {
 
-    private final CustomerDao customerDaoMock = Mockito.mock(CustomerDao.class);
+    @Mock
+    private CustomerDao customerDaoMock;
+    /*
+     Или так (если без аннотаций):
+     private CustomerDao customerDaoMock = Mockito.mock(CustomerDao.class);
+    */
 
-    private final CustomerService customerService =
-            new CustomerService(customerDaoMock);
+    @InjectMocks
+    private CustomerService customerService;
+    /*
+    Или так (если без аннотаций):
+    private CustomerService customerService
+            = new CustomerService(customerDaoMock);
+    */
 
     /**
      * Тестирование добавления покупателя
      */
     @Test
     public void testAddCustomer() throws Exception {
-        when(customerDaoMock.save(any(Customer.class)))
-                .thenReturn(Boolean.TRUE);
-
         Customer customer = new Customer(0, "11-11-11");
+
+        Mockito.when(customerDaoMock.save(Mockito.eq(customer)))
+                .thenReturn(Boolean.TRUE);
 
         Assertions.assertTrue(customerService.addCustomer(customer));
 
-        verify(customerDaoMock, times(1))
-                .exists(anyString());
-        verify(customerDaoMock, never())
-                .delete(any(Customer.class));
+        Mockito.verify(customerDaoMock, Mockito.times(1))
+                .exists(Mockito.eq("11-11-11"));
+        Mockito.verify(customerDaoMock, Mockito.never())
+                .delete(ArgumentMatchers.any(Customer.class));
     }
 
     /**
@@ -43,7 +56,8 @@ public class CustomerServiceTest {
      */
     @Test
     public void testNotSaveCustomerWithSamePhone() throws Exception {
-        when(customerDaoMock.exists(any(String.class))).thenReturn(Boolean.TRUE);
+        Mockito.when(customerDaoMock.exists(ArgumentMatchers.any(String.class)))
+                .thenReturn(Boolean.TRUE);
 
         Customer customer = new Customer(0, "11-11-11");
         Assertions.assertFalse(customerService.addCustomer(customer));
@@ -56,7 +70,7 @@ public class CustomerServiceTest {
     public void testAddCustomerWithId() throws Exception {
 
         // Using Answer to set an id to the customer which is passed in as a parameter to the mock method.
-        when(customerDaoMock.save(any(Customer.class)))
+        Mockito.when(customerDaoMock.save(ArgumentMatchers.any(Customer.class)))
                 .thenAnswer((Answer<Boolean>) invocation -> {
 
             Object[] arguments = invocation.getArguments();
@@ -85,7 +99,7 @@ public class CustomerServiceTest {
      */
     @Test
     public void testAddCustomerThrowsException() {
-        when(customerDaoMock.save(any(Customer.class)))
+        Mockito.when(customerDaoMock.save(ArgumentMatchers.any(Customer.class)))
                 .thenThrow(RuntimeException.class);
 
         Exception exception = Assertions.assertThrows(Exception.class, () -> {
