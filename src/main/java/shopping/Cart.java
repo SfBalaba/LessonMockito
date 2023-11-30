@@ -21,7 +21,8 @@ public class Cart {
      */
     private final Map<Product, Integer> products = new LinkedHashMap<>();
 
-    public Cart(Customer customer) {
+    // пакетный доступ сделан специально, т.к. корзиной должен управлять только этот пакет
+    Cart(Customer customer) {
         this.customer = customer;
     }
 

@@ -58,7 +58,8 @@ public class ShoppingServiceImpl implements ShoppingService {
             Product product = entry.getKey();
             Integer count = entry.getValue();
             if (product.getCount() < count) {
-                throw new BuyException("В наличии нет необходимого количества товара " + product.getName());
+                throw new BuyException("В наличии нет необходимого количества товара '%s'"
+                        .formatted(product.getName()));
             }
         }
     }
